@@ -20,16 +20,18 @@ class monitor extends uvm_monitor;
         forever begin
             @(vif.cb);
                 if(vif.rstn) begin
-                    Item item       = Item::type_id::create("item");
-                    item.fp_X       = vif.fp_X;
-                    item.fp_Y       = vif.fp_Y;
-                    item.fp_Z       = vif.fp_Z;
-                    item.r_mode     = vif.r_mode;
-                    item.ovrf       = vif.ovrf;
-                    item.udrf       = vif.udrf;
-                    mon_analysis_port.write(item);
-                    `uvm_info("MON",$sformatf("SAW item %s", item.convert2str()),UVM_HIGH)
+                    Item Item       = Item::type_id::create("Item");
+                    Item.fp_X       = vif.fp_X;
+                    Item.fp_Y       = vif.fp_Y;
+                    Item.fp_Z       = vif.fp_Z;
+                    Item.r_mode     = vif.r_mode;
+                    Item.ovrf       = vif.ovrf;
+                    Item.udrf       = vif.udrf;
+                    mon_analysis_port.write(Item);
+                    `uvm_info("MON",$sformatf("SAW Item %s", Item.convert2str()),UVM_HIGH)
                 end
         end
     endtask
 endclass
+
+//revisar, dudas
