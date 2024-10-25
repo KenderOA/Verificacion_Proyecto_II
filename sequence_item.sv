@@ -18,7 +18,7 @@ class Item extends uvm_sequence_item;
 
     constraint c1 { r_mode inside {3'b000, 3'b001, 3'b010, 3'b011, 3'b100}; }
     //constraint c2 { r_mode dist {3'b000 := 15, 3'b001 := 30, 3'b010 := 15, 3'b011 := 15, 3'b100 := 15}; }
-    ///creo que aqui faltarian constrainst
+    ///creo que aqui faltarian constrains
 endclass
 
 class Item extends uvm_sequence_item;
