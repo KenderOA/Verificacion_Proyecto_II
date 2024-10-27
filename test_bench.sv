@@ -7,7 +7,7 @@
 `include "scoreboard.sv"
 `include "agent.sv"
 `include "environment.sv"
-`include "test.sv"
+`include "Test.sv"
 
 module tb;
     import uvm_pkg::*;
