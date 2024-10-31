@@ -1,5 +1,7 @@
+`include "uvm_macros.svh"
+import uvm_pkg::*;
 `include "multiplicador_32_bits_FP_IEEE.sv"
-`include "interface.sv"
+`include "interface.svh"
 `include "sequence_item.sv"
 `include "sequence.sv"
 `include "monitor.sv"
