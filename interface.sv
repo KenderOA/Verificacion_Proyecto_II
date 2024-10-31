@@ -1,4 +1,4 @@
-interface multiplicador_if (input bit clk);
+interface mul_if (input bit clk);
     
     logic [3:0] r_mode;
     logic [31:0] fp_X; 

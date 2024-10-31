@@ -6,14 +6,17 @@ class test extends uvm_test;
     endfunction
 
     env e0;
-    virtual multiplicador_if vif;
+    virtual mul_if vif;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         e0 = env::type_id::create("e0", this);
-        if (!uvm_config_db#(virtual multiplicador_if)::get(this, "", "multiplicador_if", vif))
+        if (!uvm_config_db#(virtual mul_if)::get(this, "", "mul_if", vif))
             `uvm_fatal("TEST", "Did not get vif")
-        uvm_config_db#(virtual multiplicador_if)::set(this, "e0.a0.*", "multiplicador_if", vif);
+        uvm_config_db#(virtual mul_if)::set(this, "e0.a0.*", "mul_if", vif);
+
+
+
     endfunction
 
     virtual task run_phase(uvm_phase phase);
@@ -26,10 +29,4 @@ class test extends uvm_test;
         phase.drop_objection(this);
     endtask
 
-    virtual task apply_reset();
-        vif.rstn <= 0;
-        repeat(5) @ (posedge vif.clk);
-        vif.rstn <= 1;
-        repeat(10) @ (posedge vif.clk);
-    endtask
 endclass

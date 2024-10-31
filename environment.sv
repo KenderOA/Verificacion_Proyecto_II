@@ -1,4 +1,5 @@
 class env extends uvm_env;
+
     `uvm_component_utils(env)
 
     function new(string name = "env", uvm_component parent = null);
@@ -19,3 +20,4 @@ class env extends uvm_env;
         a0.m0.mon_analysis_port.connect(sb0.m_analysis_imp); //este es el que tenemos que ver
     endfunction
 endclass
+

@@ -1,4 +1,3 @@
-`include "uvm_macros.svh"
 import uvm_pkg::*;
 `include "multiplicador_32_bits_FP_IEEE.sv"
 `include "interface.svh"
@@ -12,11 +11,10 @@ import uvm_pkg::*;
 `include "test.sv"
 
 module tb;
-    import uvm_pkg::*;
     reg clk;
 
     always #10 clk =~ clk;
-    multiplicador_if _if(clk);
+    mul_if _if(clk);
 
     multiplicador_32_bits_FP_IEEE u0 (.clk(clk),
                 .r_mode(_if.r_mode),
@@ -28,7 +26,7 @@ module tb;
 
     initial begin
         clk <= 0;
-        uvm_config_db#(virtual multiplicador_if)::set(null,"uvm_test_top","multiplicador_vif",_if);
-        run_test();
+        uvm_config_db#(virtual mul_if)::set(null,"uvm_test_top","mul_vif",_if);
+        run_test(test);
     end
 endmodule
