@@ -19,7 +19,7 @@ class monitor extends uvm_monitor;
         super.run_phase(phase);
         forever begin
             @(vif.cb);
-                if(vif.rstn) begin
+
                     mul_item item       = mul_item::type_id::create("item");
                     item.fp_X       = vif.fp_X;
                     item.fp_Y       = vif.fp_Y;
@@ -29,7 +29,6 @@ class monitor extends uvm_monitor;
                     item.udrf       = vif.udrf;
                     mon_analysis_port.write(item);
                     `uvm_info("MON",$sformatf("SAW Item %s", item.convert2str()),UVM_HIGH)
-                end
         end
     endtask
 endclass
