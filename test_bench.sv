@@ -11,13 +11,13 @@ import uvm_pkg::*;
 `include "environment.sv"
 `include "test.sv"
 
-module tb;
+module test_bench;
     reg clk;
 
     always #10 clk =~ clk;
     mul_if _if(clk);
 
-    multiplicador_32_bits_FP_IEEE u0 (.clk(clk),
+    multiplicador u0 (.clk(clk),
                 .r_mode(_if.r_mode),
                 .fp_X(_if.fp_X),
                 .fp_Y(_if.fp_Y),
