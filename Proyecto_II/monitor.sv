@@ -20,7 +20,8 @@ class monitor extends uvm_monitor;
         forever begin
             @(vif.cb);
 
-                    mul_item item       = mul_item::type_id::create("item");
+                    mul_item item;       
+                    item = mul_item::type_id::create("item");
                     item.fp_X       = vif.fp_X;
                     item.fp_Y       = vif.fp_Y;
                     item.fp_Z       = vif.fp_Z;
