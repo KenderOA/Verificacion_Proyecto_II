@@ -1,6 +1,6 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
-`include "multiplicador_32_bits_FP_IEEE.sv"
+`include "multiplicador.sv"
 `include "interface.svh"
 `include "sequence_item.sv"
 `include "sequence.sv"
