@@ -1,5 +1,6 @@
-`include "multiplicador.sv"
 import uvm_pkg::*;
+`include "uvm_macros.svh"
+`include "multiplicador.sv"
 `include "interface.sv"
 `include "sequence_item.sv"
 `include "sequence.sv"
