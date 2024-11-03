@@ -1,6 +1,6 @@
 interface mul_if (input bit clk);
     
-    logic [3:0] r_mode;
+    logic [2:0] r_mode;
     logic [31:0] fp_X; 
     logic [31:0] fp_Y;
 
@@ -11,6 +11,7 @@ interface mul_if (input bit clk);
     clocking cb @(posedge clk);
 
         default input #1step output #3ns;
+
         input fp_Z;
         input ovrf;
         input udrf;

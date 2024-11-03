@@ -1,4 +1,5 @@
 class test extends uvm_test;
+
     `uvm_component_utils(test)
 
     function new(string name = "test", uvm_component parent = null);
@@ -6,27 +7,32 @@ class test extends uvm_test;
     endfunction
 
     env e0;
+    gen_item_seq seq;
     virtual mul_if vif;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
+
         e0 = env::type_id::create("e0", this);
-        if (!uvm_config_db#(virtual mul_if)::get(this, "", "mul_if", vif))
+
+      if (!uvm_config_db#(virtual mul_if)::get(this, "", "mul_if", vif)) begin
             `uvm_fatal("TEST", "Did not get vif")
+      end
         uvm_config_db#(virtual mul_if)::set(this, "e0.a0.*", "mul_if", vif);
 
-
+        seq = gen_item_seq::type_id::create("seq");
+        seq.randomize();
 
     endfunction
 
     virtual task run_phase(uvm_phase phase);
-        gen_item_seq seq = gen_item_seq::type_id::create("seq");
-        phase.raise_objection(this);
-        apply_reset();
 
-        seq.randomize();
+        phase.raise_objection(this);
+      
         seq.start(e0.a0.s0);
+        #400;
         phase.drop_objection(this);
+
     endtask
 
 endclass

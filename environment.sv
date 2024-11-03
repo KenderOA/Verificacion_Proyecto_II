@@ -7,7 +7,7 @@ class env extends uvm_env;
     endfunction
 
     agent        a0;     // Agent handle
-    scoreboard   sb0;    // Scoreboard handle
+    scoreboard   sb0;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
@@ -16,8 +16,8 @@ class env extends uvm_env;
     endfunction
 
     virtual function void connect_phase(uvm_phase phase);
-        super.connect_phase(phase);
-        a0.m0.mon_analysis_port.connect(sb0.m_analysis_imp); //este es el que tenemos que ver
+    	super.connect_phase(phase);
+        a0.m0.mon_analysis_port.connect(sb0.m_analysis_imp);
     endfunction
 endclass
 
