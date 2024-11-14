@@ -117,7 +117,7 @@ class scoreboard extends uvm_scoreboard;
           if (resultado_esperado_r == item.fp_Z) begin
                 `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", item.fp_Z, resultado_esperado_r), UVM_LOW);
             end else begin
-                if(item.udrf == 1 && item.fp_Z inside {0, 32'h80000000}) begin
+              if(item.udrf == 1 &&  item.fp_Z inside {0, 32'h80000000}) begin
                   `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: ± 0 | RESULTADO OBTENIDO: %h", item.fp_Z), UVM_LOW);
                 end else if (item.ovrf == 1 && item.fp_Z inside {32'hFF800000, 32'h7F800000}) begin
                     `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: ± inf | RESULTADO OBTENIDO: %h", item.fp_Z), UVM_LOW);
