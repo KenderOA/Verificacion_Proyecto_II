@@ -54,78 +54,88 @@ class scoreboard extends uvm_scoreboard;
       
      resultado_esperado = {signo, exponente_result, mantisa_result};
 
-    // Redondeo basado en r_mode y los bits de la tabla
-    case (r_mode)
-          3'b000: begin
-              // Redondeo a la unidad más cercana, ties to even
-              if (round_bit == 0) begin
-                  // Si round_bit es 0, no se redondea
-                  resultado_esperado_r = resultado_esperado;
-              end else if (round_bit == 1) begin
-                  // Si round_bit es 1, chequeamos el valor de guard_bit y sticky_bit
-                  if (guard_bit || sticky_bit) begin
-                      // Si guard_bit o sticky_bit son 1, redondeamos hacia arriba
-                      resultado_esperado_r = resultado_esperado + 1;
-                  end else begin
-                      // Si guard_bit y sticky_bit son 0, comparo los dos valores posibles
-                    if (resultado_esperado[0] == 1) begin
-                          // Si mantisa_result es impar, el valor de mantisa_result + 1 será par
-                          resultado_esperado_r = resultado_esperado + 1;
-                      end else begin
-                          // Si mantisa_result es par, no hace falta cambiarlo
-                          resultado_esperado_r = resultado_esperado;
-                      end
-                  end
-              end
-          end
-        3'b001: begin
-            // Round to zero (truncate)
-            resultado_esperado_r = resultado_esperado; // No cambios, simplemente truncar
-        end
-        3'b010: begin
-            // Round towards -∞
-             if (signo == 0) begin
-                resultado_esperado_r = resultado_esperado;
-            end else begin
-            resultado_esperado_r = resultado_esperado + 2;
-        	end
-        end
-        3'b011: begin
-            // Round towards +∞
-          if (signo == 0) begin
+case (item.r_mode)
+3'b000: begin
+    // Redondeo a la unidad más cercana, ties to even
+    if (round_bit == 0) begin
+        // Si round_bit es 0, no se redondea
+        resultado_esperado_r = resultado_esperado;
+    end else if (round_bit == 1) begin
+        // Si round_bit es 1, analizamos guard_bit y sticky_bit
+        if (guard_bit || sticky_bit) begin
+            // Si guard_bit o sticky_bit son 1, redondeamos hacia arriba
+            resultado_esperado_r = resultado_esperado + 1;
+        end else begin
+            // Si guard_bit y sticky_bit son 0, aplicamos "ties to even"
+            if (resultado_esperado[0] == 1) begin
+                // Si resultado_esperado es impar, redondeamos hacia arriba para hacer par
                 resultado_esperado_r = resultado_esperado + 1;
             end else begin
-            resultado_esperado_r = resultado_esperado;
-        	end
-        end
-        3'b100: begin
-            // Round to nearest, ties away from zero
-          if (round_bit == 0) begin
+                // Si resultado_esperado es par, no redondeamos
                 resultado_esperado_r = resultado_esperado;
-            end else begin
-            resultado_esperado_r = resultado_esperado +1;
-        	end
-        end
-        default: begin
-            `uvm_error("SCBD", "Modo de redondeo desconocido");
-        end
-    endcase
-      
-        if (!(item.fp_X inside {32'hFF800000, 32'h7F800000, 0, 32'h80000000, 32'hFFC00000, 32'h7FC00000}) && 
-            !(item.fp_Y inside {32'hFF800000, 32'h7F800000, 0, 32'h80000000, 32'hFFC00000, 32'h7FC00000})) begin
-            `uvm_info("SCBD", $sformatf("Exp esp: %h | Exp sal: %h | Man esp: %h | Man sal: %h | Res Esp: %h | Res Sal: %h | R_modo: %b | signo: %b " , exponente_result, item.fp_Z[30:23], mantisa_result, item.fp_Z[22:0],  item.fp_Z, resultado_esperado_r , item.r_mode, signo), UVM_LOW);
-          if (resultado_esperado_r == item.fp_Z) begin
-                `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", item.fp_Z, resultado_esperado_r), UVM_LOW);
-            end else begin
-              if(item.udrf == 1 &&  item.fp_Z inside {0, 32'h80000000}) begin
-                  `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: ± 0 | RESULTADO OBTENIDO: %h", item.fp_Z), UVM_LOW);
-                end else if (item.ovrf == 1 && item.fp_Z inside {32'hFF800000, 32'h7F800000}) begin
-                    `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: ± inf | RESULTADO OBTENIDO: %h", item.fp_Z), UVM_LOW);
-                end else begin
-                    `uvm_error("SCBD", $sformatf("ERROR: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado, item.fp_Z));
-                end
             end
         end
+    end
+end
+
+
+       
+    3'b001: begin
+        // Round to zero (truncate)
+        resultado_esperado_r = resultado_esperado; // No cambios, simplemente truncar
+    end
+    3'b010: begin
+        // Round towards -∞
+        if (signo == 0) begin
+            resultado_esperado_r = resultado_esperado;
+        end else begin
+            resultado_esperado_r = resultado_esperado + 1;
+        end
+    end
+    3'b011: begin
+        // Round towards +∞
+        if (signo == 0) begin
+            resultado_esperado_r = resultado_esperado + 1;
+        end else begin
+            resultado_esperado_r = resultado_esperado;
+        end
+    end
+    3'b100: begin
+        // Round to nearest, ties away from zero
+        if (round_bit == 0) begin
+            resultado_esperado_r = resultado_esperado;
+        end else begin
+            resultado_esperado_r = resultado_esperado + 1;
+        end
+    end
+    default: begin
+        // Modo de redondeo no encontrado
+        `uvm_error("SCBD", $sformatf("ERROR: MODO DE REDONDEO NO ENCONTRADO: %b", item.r_mode));
+    end
+endcase
+
+// Verificar si el modo es válido antes de proceder con los mensajes UVM
+if (!(item.fp_X inside {32'hFF800000, 32'h7F800000, 0, 32'h80000000, 32'hFFC00000, 32'h7FC00000}) && 
+    !(item.fp_Y inside {32'hFF800000, 32'h7F800000, 0, 32'h80000000, 32'hFFC00000, 32'h7FC00000}) &&
+    item.r_mode inside {3'b000, 3'b001, 3'b010, 3'b011, 3'b100} ) 
+begin
+    `uvm_info("SCBD", $sformatf("Exp obt: %h | Exp esp: %h | Man obt: %h | Man esp: %h | Res Esp: %h | Res Obt nr: %h | R_modo: %b | signo: %b", exponente_result, item.fp_Z[30:23], mantisa_result, item.fp_Z[22:0], item.fp_Z, resultado_esperado, item.r_mode, signo), UVM_LOW);
+
+    if (resultado_esperado_r == item.fp_Z) begin
+        `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", item.fp_Z, resultado_esperado_r), UVM_LOW);
+    end else begin
+        // Caso para Underflow
+        if (item.udrf == 1) begin
+            `uvm_info("SCBD", $sformatf("INFO: UNDERFLOW DETECTADO: ± 0 | RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
+        // Caso para Overflow
+        end else if (item.ovrf == 1) begin
+            `uvm_info("SCBD", $sformatf("INFO: OVERFLOW DETECTADO: ± inf | RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
+        end else begin
+          `uvm_error("SCBD", $sformatf("ERROR: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z));
+        end
+    end
+end
+
 
         if (signo) begin
             signo_str = "-";
@@ -162,11 +172,11 @@ class scoreboard extends uvm_scoreboard;
                     aciertos = aciertos + 1;
                 end else begin
                     `uvm_error("SCBD", $sformatf("ERROR: SIGNO INCORRECTO Y RESULTADO CORRECTO | %s 0 = %h", 
-                                signo_str, item.fp_Z));
+                                signo_str, resultado_esperado_r));
                     fallos = fallos + 1;
                 end
             end else begin
-                `uvm_error("SCBD", $sformatf("ERROR: RESULTADO INCORRECTO fp_Z = %h != ±0", item.fp_Z));
+                `uvm_error("SCBD", $sformatf("ERROR: RESULTADO INCORRECTO fp_Z = %h != ±0", resultado_esperado_r));
                 fallos = fallos + 1;
             end
         end
