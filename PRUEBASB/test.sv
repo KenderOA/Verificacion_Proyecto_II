@@ -27,25 +27,25 @@ class test extends uvm_test;
 
         phase.raise_objection(this);
 
-		//seq.case_type = "default";
-      	//seq.randomize();
-        //seq.start(e0.a0.s0);
+	seq.case_type = "default";
+      	seq.randomize();
+        seq.start(e0.a0.s0);
       	
-      	//seq.case_type = "NaN";
-      	//seq.randomize();
-        //seq.start(e0.a0.s0);
+      	seq.case_type = "NaN";
+      	seq.randomize();
+        seq.start(e0.a0.s0);
       
       	seq.case_type = "r_invalid";
       	seq.randomize();
         seq.start(e0.a0.s0);
       
-      	//seq.case_type = "Zero";
-      	//seq.randomize();
-        //seq.start(e0.a0.s0);
+      	seq.case_type = "Zero";
+      	seq.randomize();
+        seq.start(e0.a0.s0);
       
-      	//seq.case_type = "Infinity";
-      	//seq.randomize();
-        //seq.start(e0.a0.s0);
+      	seq.case_type = "Infinity";
+      	seq.randomize();
+        seq.start(e0.a0.s0);
       
         #700;
         phase.drop_objection(this);
