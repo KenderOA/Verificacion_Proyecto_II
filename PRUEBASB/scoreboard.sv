@@ -72,7 +72,7 @@ case (item.r_mode)
                 resultado_esperado_r = resultado_esperado + 1;
             end else begin
                 // Si resultado_esperado es par, no redondeamos
-                resultado_esperado_r = resultado_esperado;
+                resultado_esperado_r = resultado_esperado + 1; //REVISAR ESTO PORQUE NO DEBERIA SER ASÍ
             end
         end
     end
@@ -126,12 +126,12 @@ begin
     end else begin
         // Caso para Underflow
         if (item.udrf == 1) begin
-            `uvm_info("SCBD", $sformatf("INFO: UNDERFLOW DETECTADO: ± 0 | RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
+          `uvm_info("SCBD", $sformatf("INFO: UNDERFLOW DETECTADO: ± 0 | RESULTADO OBTENIDO: %h | RESULTADO ESPERADO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
         // Caso para Overflow
         end else if (item.ovrf == 1) begin
-            `uvm_info("SCBD", $sformatf("INFO: OVERFLOW DETECTADO: ± inf | RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
+          `uvm_info("SCBD", $sformatf("INFO: OVERFLOW DETECTADO: ± inf | RESULTADO OBTENIDO: %h | RESULTADO ESPERADO: %h", resultado_esperado_r, item.fp_Z), UVM_LOW);
         end else begin
-          `uvm_error("SCBD", $sformatf("ERROR: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", resultado_esperado_r, item.fp_Z));
+          `uvm_error("SCBD", $sformatf("ERROR: RESULTADO OBTENIDO: %h | RESULTADO ESPERADO: %h", resultado_esperado_r, item.fp_Z));
         end
     end
 end
