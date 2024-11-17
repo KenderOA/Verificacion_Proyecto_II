@@ -17,12 +17,12 @@ class gen_item_seq extends uvm_sequence;
   endfunction
 
   // Constraint to ensure num is within the range [1:15]
-  constraint c1 { num inside {[1:15]}; }
+  constraint c1 { num inside {[10:30]}; }
 
   // Virtual task that defines the body of the sequence
   virtual task body();
     // Assertion to verify that `num` satisfies the constraint `c1`
-    assert((num >= 1) && (num <= 15)) 
+    assert((num >= 10) && (num <= 30)) 
       else `uvm_error("ASSERTION FAILED", $sformatf("The variable num=%0d does not satisfy constraint c1 [20:50]", num));
 
     // Case statement to handle different case types
