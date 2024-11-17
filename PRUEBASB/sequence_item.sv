@@ -29,10 +29,13 @@ class Item extends uvm_sequence_item;
         this.NaN.constraint_mode(0);
         this.r_invalid.constraint_mode(0);
         this.prueba.constraint_mode(0);
+      	this.zero_x_inf_y.constraint_mode(0);
+      	this.inf_x_NaN_y.constraint_mode(0);
+      	this.zero_x_NaN_y.constraint_mode(0);
     endfunction
 
     constraint r_valid { 
-        r_mode inside {3'b000, 3'b001, 3'b010, 3'b011, 3'b100}; 
+      r_mode inside {3'b000, 3'b001, 3'b010, 3'b011, 3'b100};  
     }
 
     constraint zero {
@@ -68,5 +71,28 @@ class Item extends uvm_sequence_item;
         fp_X == 32'b01110011001010110111110111100110 && 
         fp_Y == 32'b01000111101001001110001110001111;
     }
+  
+    constraint zero_x_inf_y {
+      (fp_X == 0 || 
+       fp_X == 32'h80000000) &&
+      (fp_Y == 32'hFF800000 || 
+       fp_Y == 32'h7F800000 );
+    }
+
+
+    constraint inf_x_NaN_y {
+    (fp_X == 32'hFF800000 || 
+     fp_X == 32'h7F800000)  &&
+     (fp_Y == 32'hFFC00000 || 
+      fp_Y == 32'h7FC00000);
+    }
+
+
+   constraint zero_x_NaN_y {
+      	(fp_X == 0 || 
+      	 fp_X == 32'h80000000)  && 
+     	(fp_Y == 32'hFFC00000 || 
+         fp_Y == 32'h7FC00000);
+   }
 
 endclass
