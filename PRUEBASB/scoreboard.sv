@@ -116,7 +116,7 @@ class scoreboard extends uvm_scoreboard; // Define the scoreboard class extendin
             !(item.fp_Y inside {32'hFF800000, 32'h7F800000, 0, 32'h80000000, 32'hFFC00000, 32'h7FC00000}) &&
             item.r_mode inside {3'b000, 3'b001, 3'b010, 3'b011, 3'b100} ) 
         begin
-            `uvm_info("SCBD", $sformatf("Exp obt: %h | Exp esp: %h | Man obt: %h | Man esp: %h | Res Esp: %h | Res Obt nr: %h | R_modo: %b | signo: %b", exponente_result, item.fp_Z[30:23], mantisa_result, item.fp_Z[22:0], item.fp_Z, resultado_esperado, item.r_mode, signo), UVM_LOW);
+           `uvm_info("SCBD", $sformatf("Fp_X: %h | Fp_Y: %h | Res Esp: %h | Res Obt nr: %h | R_modo: %b | signo: %b", item.fp_X, item.fp_Y, item.fp_Z, resultado_esperado, item.r_mode, signo), UVM_LOW);
 
             if (resultado_esperado_r == item.fp_Z) begin
                 `uvm_info("SCBD", $sformatf("PASS: RESULTADO ESPERADO: %h | RESULTADO OBTENIDO: %h", item.fp_Z, resultado_esperado_r), UVM_LOW);
