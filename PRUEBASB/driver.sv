@@ -11,7 +11,7 @@ class driver extends uvm_driver #(Item);
     virtual mul_if vif;
 
     // Restricción para el retardo entre transacciones
-  constraint delay_c { delay inside {[1:50]}; }
+    constraint delay_c { delay inside {[1:50]}; }
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
@@ -27,8 +27,8 @@ class driver extends uvm_driver #(Item);
             seq_item_port.get_next_item(m_item);
 
             // Aleatorizar el retardo antes de enviar la transacción
-          if (!this.randomize() with { delay inside {10, 20, 30, 40}; }) begin
-            `uvm_warning("DRV", "Randomization of delay failed, using default delay of 10 time units");
+            if (!this.randomize() with { delay inside {10, 20, 30, 40}; }) begin
+                `uvm_warning("DRV", "Randomization of delay failed, using default delay of 10 time units");
                 delay = 10; // Valor predeterminado en caso de fallo de randomización
             end
 
@@ -47,6 +47,10 @@ class driver extends uvm_driver #(Item);
 
     virtual task driver_item(Item m_item);
         `uvm_info("DRV", "Sending item to interface", UVM_LOW);
+
+        // Aserción para verificar que el valor de delay esté dentro del rango esperado
+        assert(delay >= 10 && delay <= 40)
+            else `uvm_error("ASSERTION FAILED", $sformatf("Delay value out of range: %0d", delay));
 
         // Asignar valores a la interfaz
         @(vif.cb);
